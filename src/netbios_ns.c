@@ -553,7 +553,7 @@ static ssize_t netbios_ns_recv(netbios_ns *ns,
                            (struct sockaddr *)&addr, &addr_len);
             if (size < 0)
                 return -1;
-            if (wait_ip != 0 && addr_len >= sizeof(struct sockaddr_in))
+            if (wait_ip != 0 && addr_len >= (socklen_t)sizeof(struct sockaddr_in))
             {
                 // wait for a reply from a specific ip
                 if (wait_ip != addr.sin_addr.s_addr)
