@@ -39,14 +39,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define _FILE_OFFSET_BITS 64
-
 #include <libtasn1.h>
 
-#if defined(__ANDROID__)
-# undef  off_t
-# define off_t off64_t
-#endif
 /**
   * @struct smb_tid
   * @brief The id of a connection to a share within a session.
