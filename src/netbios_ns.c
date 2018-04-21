@@ -115,6 +115,7 @@ struct netbios_ns
     pthread_mutex_t     abort_lock;
     bool                aborted;
 #endif
+    unsigned int        ns_timeout;
     unsigned int        discover_broadcast_timeout;
     pthread_t           discover_thread;
     bool                discover_started;
@@ -706,6 +707,14 @@ void          netbios_ns_destroy(netbios_ns *ns)
     free(ns);
 }
 
+void netbios_ns_timeout(netbios_ns *ns, unsigned int timeout)
+{
+    if (!ns)
+        return;
+
+    ns->ns_timeout = timeout;
+}
+
 int      netbios_ns_resolve(netbios_ns *ns, const char *name, char type, uint32_t *addr)
 {
     netbios_ns_entry    *cached;
@@ -736,8 +745,16 @@ int      netbios_ns_resolve(netbios_ns *ns, const char *name, char type, uint32_
     free(encoded_name);
 
     // Now wait for a reply and pray
-    timeout.tv_sec = 2;
-    timeout.tv_usec = 420;
+    if (ns->ns_timeout > 0)
+    {
+        timeout.tv_sec = ns->ns_timeout;
+        timeout.tv_usec = 0;
+    }
+    else
+    {
+        timeout.tv_sec = 2;
+        timeout.tv_usec = 420;
+    }
     recv = netbios_ns_recv(ns, &timeout, NULL, true, 0, &name_query);
 
     if (recv < 0)

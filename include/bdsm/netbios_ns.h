@@ -89,6 +89,12 @@ netbios_ns    *netbios_ns_new();
 void          netbios_ns_destroy(netbios_ns *ns);
 
 /**
+ * @brief Set a timeout on the netbios name service object
+ * @param[in] timeout in seconds
+ */
+void          netbios_ns_timeout(netbios_ns *ns, unsigned int timeout);
+
+/**
  * @brief Resolve a Netbios name
  * @details This function tries to resolves the given NetBIOS name with the
  * given type on the LAN, using broadcast queries. No WINS server is called.
